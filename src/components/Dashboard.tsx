@@ -223,6 +223,7 @@ const Dashboard: React.FC = () => {
       const matchingSchool = schoolRankingData.find(
         (school) => school.school === user.schoolName
       );
+      console.log(schoolRanking)
       
       if (matchingSchool) {
         console.log("Found school ranking data:", matchingSchool);

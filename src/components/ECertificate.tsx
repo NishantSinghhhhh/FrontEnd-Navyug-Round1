@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from './Dashboard/Header';
 import { useAuth } from '../context/AuthContext';
 import { schoolRankingData } from "../data/schoolRanking.ts";

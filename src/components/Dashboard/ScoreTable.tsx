@@ -12,7 +12,7 @@ interface ScoresTableProps {
   totalMarks: Record<string, number>;
 }
 
-const ScoresTable: React.FC<ScoresTableProps> = ({ scores, totalMarks }) => {
+const ScoresTable: React.FC<ScoresTableProps> = ({ scores }) => {
   const calculatePercentile = (maxMarks: number, studentMarks: number): number => {
     if (studentMarks > maxMarks) {
         throw new Error("Student marks cannot exceed maximum marks.");

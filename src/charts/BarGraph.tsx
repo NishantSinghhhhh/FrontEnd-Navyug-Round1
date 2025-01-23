@@ -115,7 +115,6 @@ const getAverageScore = (category: string, sectionKey: string): number => {
 const BarGraph: React.FC<BarGraphProps> = ({
     category,
     section,
-    frequencyData,
     sectionKey,
     fetchedData,
   }) => {

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import { AuthProvider } from "./context/AuthContext";
 import SchoolRanking from  "./components/DataGeneration/SchoolRanking";
@@ -7,7 +7,6 @@ import Dashboard from "./components/Dashboard";
 import AllSchool from "./components/DataGeneration/AllSchool";
 import ECertificate from "./components/ECertificate";
 import { RankingProvider } from "./context/DataContext";
-import NumberVerificationForm from "./components/Verification";
 
 const App = () => {
   return (

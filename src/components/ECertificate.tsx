@@ -71,6 +71,7 @@ const handleFetchDetails = async () => {
     return;
   }
 
+  console.log(schoolRanking) ;
   setIsFetching(true);
   try {
     const response = await fetch("http://localhost:7009/result/schoolName", {

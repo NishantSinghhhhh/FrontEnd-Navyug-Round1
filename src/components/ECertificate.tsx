@@ -74,7 +74,7 @@ const handleFetchDetails = async () => {
   console.log(schoolRanking) ;
   setIsFetching(true);
   try {
-    const response = await fetch("https://backend-navyug-round1-result.vercel.app/schoolName", {
+    const response = await fetch("https://backend-navyug-round1-result-2.onrender.com/schoolName", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: schoolName }),

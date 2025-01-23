@@ -16,7 +16,7 @@ const SchoolRanking: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("https://backend-navyug-round1-result.vercel.app/datatoJson/SchoolRanking", {
+      const response = await fetch("https://backend-navyug-round1-result-2.onrender.com/datatoJson/SchoolRanking", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

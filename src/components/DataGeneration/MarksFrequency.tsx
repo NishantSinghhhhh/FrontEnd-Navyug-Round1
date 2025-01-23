@@ -16,7 +16,7 @@ const MarksFrequency: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:7009/datatoJson/SchoolFrequecny", {
+      const response = await fetch("https://backend-navyug-round1-result.vercel.app/SchoolFrequecny", {
         method: "POST", // Changed to POST to send data
         headers: {
           "Content-Type": "application/json",

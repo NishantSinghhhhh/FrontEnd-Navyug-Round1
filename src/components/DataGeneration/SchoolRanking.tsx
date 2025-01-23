@@ -16,12 +16,12 @@ const SchoolRanking: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:7009/datatoJson/SchoolRanking", {
-        method: "POST", // Changed to POST to send data
+      const response = await fetch("https://backend-navyug-round1-result.vercel.app/datatoJson/SchoolRanking", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ startProcess: true }), // Sending boolean data
+        body: JSON.stringify({ startProcess: true }), 
       });
       if (!response.ok) {
         throw new Error("Failed to fetch data");
@@ -29,7 +29,6 @@ const SchoolRanking: React.FC = () => {
       const result: SchoolRankingData = await response.json();
       setData(result);
   
-      // Save the fetched data to a .ts file in JSON format
       const fileContent = `export const schoolRankingData = ${JSON.stringify(result, null, 2)};`;
       const blob = new Blob([fileContent], { type: "text/javascript" });
       const link = document.createElement("a");

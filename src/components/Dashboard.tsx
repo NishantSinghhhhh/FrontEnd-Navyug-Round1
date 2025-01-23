@@ -456,7 +456,7 @@ const handleFetchDetails = async () => {
 
   try {
     // Your existing fetch logic remains here...
-    const response = await fetch("http://localhost:7009/result/schoolName", {
+    const response = await fetch("https://backend-navyug-round1-result.vercel.app/schoolName", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

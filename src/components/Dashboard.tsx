@@ -185,7 +185,6 @@ const Dashboard: React.FC = () => {
   const category2Section2Marks = schoolFrequencyData.category2Section2Marks;
   const category2Section3Marks = schoolFrequencyData.category2Section3Marks;
 
-
   const barGraphRefs = [
     useRef<HTMLDivElement | null>(null),
     useRef<HTMLDivElement | null>(null),

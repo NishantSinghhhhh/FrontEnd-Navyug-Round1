@@ -169,8 +169,8 @@ const generateCertificate = async (studentName: string, uniqueNumber: string) =>
     <div>
       <div className="shadow-lg">
         <Header />
-        <div className="bg-gray-50 h-[100vh]">
-        <div className="flex items-center justify-center gap-[80px] p-4">
+        <div className="bg-white h-[100vh]">
+        <div className="flex items-center justify-center gap-[80px] p-4 mt-[4rem]">
             <button
               onClick={handleFetchDetails}
               disabled={isFetching}

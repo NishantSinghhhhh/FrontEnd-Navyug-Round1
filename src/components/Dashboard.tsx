@@ -719,35 +719,31 @@ const handleFetchDetails = async () => {
     <div className="h-[130vh] bg-gray-50">
       <Header/>
 
-      <div className="text-center mb-12 mt-16">
-        <h1 className="text-4xl font-bold text-gray-800 mb-3">Round 1 Detailed Results</h1>
-      </div>
-
-      <div className="text-black text-2xl font-bold flex justify-center items-center pb-10">
-        {schoolName ? schoolName : "Loading school name..."}
-      </div>
-
-      <div className="text-center flex  items-center justify-center gap-[2rem] ">
-        <button
-          onClick={handleFetchDetails}
-          className={`bg-blue-500 text-white px-6 py-2 rounded shadow hover:bg-blue-600 ${
-            isFetching ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          disabled={isFetching}
-        >
-          {isFetching ? "Fetching..." : "Fetch Details"}
-        </button>
-      <button
+      <div className="text-center mb-8 sm:mb-12 mt-10 sm:mt-16">
+      <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-2 sm:mb-3">
+        Round 1 Detailed Results
+      </h1>
+    </div>
+    <div className="text-lg sm:text-2xl font-bold text-black text-center pb-6 sm:pb-10">
+      {schoolName ? schoolName : "Loading school name..."}
+    </div>
+    <div className="flex flex-row sm:flex-row items-center justify-center gap-4 sm:gap-8">
+      <button 
+        onClick={handleFetchDetails}
+        className={`w-auto sm:w-auto bg-blue-500 text-white px-2 py-2 sm:px-6 sm:py-2 rounded shadow hover:bg-blue-600 ${
+          isFetching ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        disabled={isFetching}
+      >
+        {isFetching ? "Fetching..." : "Fetch Details"}
+      </button>
+      <button 
         onClick={generatePDF}
-        className="bg-blue-500 text-white px-6 py-2 rounded shadow hover:bg-red-600"
+        className="w-auto sm:w-auto bg-blue-500 text-white px-4 py-2 sm:px-6 sm:py-2 rounded shadow hover:bg-red-600"
       >
         Download PDF
       </button>
-
-        <div>
-        </div>
-      </div>
-
+    </div>
       <div>
       {fetchedData && <ScoresTable scores={fetchedData.scores} totalMarks={totalMarks} />}
     </div>

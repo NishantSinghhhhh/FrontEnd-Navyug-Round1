@@ -3,10 +3,8 @@ import Header from './Dashboard/Header';
 import { useAuth } from '../context/AuthContext';
 import { schoolRankingData } from "../data/schoolRanking.ts";
 import { creds } from "../data/creds.ts";
-import { PDFDocument, rgb } from 'pdf-lib';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import pdfTemplate from '../assets/Round 1 participants.pdf';
-import cursive from "../assets/Italianno-Regular.ttf"
-import fontkit from '@pdf-lib/fontkit';
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
@@ -59,6 +57,7 @@ const ECertificate = () => {
         (school) => school.school === user.schoolName
       );
       if (matchingSchool) setSchoolRanking(matchingSchool);
+      
     }
   }, [username]);
 
@@ -70,11 +69,10 @@ const handleFetchDetails = async () => {
     alert("School name is not valid.");
     return;
   }
-
-  console.log(schoolRanking) ;
+  console.log(schoolRanking)
   setIsFetching(true);
   try {
-    const response = await fetch("https://backend-navyug-round1-result-2.onrender.com/result/schoolName", {
+    const response = await fetch("http://localhost:7009/result/schoolName", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: schoolName }),
@@ -107,49 +105,44 @@ const handleFetchDetails = async () => {
   }
 };
 
-  const generateCertificate = async (studentName: string, uniqueNumber: string) => {
-    const templateResponse = await fetch(pdfTemplate);
-    const fontResponse = await fetch(cursive);
+const generateCertificate = async (studentName: string, uniqueNumber: string) => {
+  const templateResponse = await fetch(pdfTemplate);
+  const templateBuffer = await templateResponse.arrayBuffer();
 
-    const templateBuffer = await templateResponse.arrayBuffer();
-    const fontBuffer = await fontResponse.arrayBuffer();
+  const pdfDoc = await PDFDocument.load(templateBuffer);
+  const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-    const pdfDoc = await PDFDocument.load(templateBuffer);
-    pdfDoc.registerFontkit(fontkit);
-    const customFont = await pdfDoc.embedFont(fontBuffer);
+  const pages = pdfDoc.getPages();
+  const firstPage = pages[0];
+  const { width, height } = firstPage.getSize();
 
-    const pages = pdfDoc.getPages();
-    const firstPage = pages[0];
-    const { width, height } = firstPage.getSize();
+  const fontSize = 24;
+  const textWidth = helveticaFont.widthOfTextAtSize(studentName, fontSize);
+  const x = (width - textWidth) / 2;
+  const y = height / 2 + 3;
 
-    const fontSize = 36;
-    const textWidth = customFont.widthOfTextAtSize(studentName, fontSize);
-    const x = (width - textWidth) / 2;
-    const y = height / 2 + 1;
+  firstPage.drawText(studentName, {
+    x,
+    y,
+    size: fontSize,
+    font: helveticaFont,
+    color: rgb(0, 0, 0),
+  });
 
-    firstPage.drawText(studentName, {
-      x,
-      y,
-      size: fontSize,
-      font: customFont,
-      color: rgb(0, 0, 0),
-    });
+  const numberFontSize = 18;
+  const numberX = 665;
+  const numberY = 22;
 
-    const numberFontSize = 24;
-    const numberX =  665;
-    const numberY =  22
+  firstPage.drawText(uniqueNumber, {
+    x: numberX,
+    y: numberY,
+    size: numberFontSize,
+    font: helveticaFont,
+    color: rgb(1, 0, 0),
+  });
 
-    firstPage.drawText(uniqueNumber, {
-      x: numberX,
-      y: numberY,
-      size: numberFontSize,
-      font: customFont,
-      color: rgb(1, 0, 0),
-    });
-
-    return await pdfDoc.save();
-  };
-
+  return await pdfDoc.save();
+};
   const handleDownloadAll = async () => {
     if (!fetchedData || fetchedData.scores.length === 0) {
       alert("No data to generate certificates.");

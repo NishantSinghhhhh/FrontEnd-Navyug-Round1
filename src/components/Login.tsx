@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import { creds } from "../data/creds.ts";
-import { useAuth } from "../context/AuthContext.tsx"; // Import the custom hook
-import { FaEye, FaEyeSlash } from "react-icons/fa"; //
+import { useAuth } from "../context/AuthContext.tsx";
 import logo4 from "../assets/Ait.svg";
 
 interface FormState {
@@ -30,12 +29,6 @@ const Login: React.FC = () => {
     }));
   };
 
-  const togglePassword = () => {
-    setFormData((prevState) => ({
-      ...prevState,
-      showPassword: !prevState.showPassword,
-    }));
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,13 +97,7 @@ const Login: React.FC = () => {
                 required
                 className="mt-1 bg-white mb-6 block w-full px-[20px] py-3 border text-black border-gray-300 text-sm rounded-md"
               />
-              <button
-                type="button"
-                onClick={togglePassword}
-                className="absolute  bottom-[0.8rem] text-gray-700 right-[1rem]"
-              >
-                {formData.showPassword ? <FaEye /> : <FaEyeSlash />}
-              </button>
+
             </div>
             <button
               type="submit"

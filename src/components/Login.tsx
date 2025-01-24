@@ -30,7 +30,12 @@ const Login: React.FC = () => {
     }));
   };
 
-
+  const togglePassword = () => {
+    setFormData((prevState) => ({
+      ...prevState,
+      showPassword: !prevState.showPassword,
+    }));
+  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const user = creds.find(
@@ -84,7 +89,7 @@ const Login: React.FC = () => {
                 placeholder="Username"
                 type="text"
                 required
-                className="block w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="block bg-white w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             
@@ -100,12 +105,12 @@ const Login: React.FC = () => {
                   type={formData.showPassword ? "text" : "password"}
                   placeholder="Password"
                   required
-                  className="block w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 pr-10"
+                  className="block bg-white w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 pr-10"
                 />
                 <button
                   type="button"
                   onClick={togglePassword}
-                  className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500"
+                  className="absolute bg-transparent inset-y-0 right-0 px-3 flex items-center text-gray-500"
                 >
                   {formData.showPassword ? <FaEye /> : <FaEyeSlash />}
                 </button>

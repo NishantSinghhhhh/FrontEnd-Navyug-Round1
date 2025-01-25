@@ -218,7 +218,7 @@ const ECertificate = () => {
                 </div>
 
                 <div className='text-[18px] text-black '>
-                  Additionally, 50 APS (Academic Performance Scholars) also participated, setting a high benchmark for excellence. Their determination and commitment to mastering challenging concepts are truly inspiring. This event has brought together not just students, but an entire community committed to success. Whether you’re an APS participant or a student in the general pool, every effort made counts. Remember, success is not final, failure is not fatal—it’s the courage to continue that counts. You all are on a journey of growth and achievement!
+                  Additionally, 50 APS (Academic Performance Scholars) also participated, setting a high benchmark for excellence. Their determination and commitment to mastering challenging concepts are truly inspiring.
                 </div>
               </div>
             </>

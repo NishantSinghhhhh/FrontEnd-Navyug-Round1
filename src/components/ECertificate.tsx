@@ -9,6 +9,9 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar.tsx';
+import Footer from './Footer.tsx';
+import DataLoader from './DataLoader.tsx';
+
 interface UserScore {
   username: string;
   studentName: string;
@@ -68,88 +71,89 @@ const ECertificate = () => {
     }
   }, [username]);
 
-const numbersInUsername = username?.match(/\d+/g)?.join("") || "No numbers found";
-console.log("Numbers in UserName: ", numbersInUsername);
+  const numbersInUsername = username?.match(/\d+/g)?.join("") || "No numbers found";
+  console.log("Numbers in UserName: ", numbersInUsername);
 
-const handleFetchDetails = async () => {
-  if (!schoolName || schoolName.trim() === "") {
-    alert("School name is not valid.");
-    return;
-  }
-  console.log(schoolRanking)
-  setIsFetching(true);
-  try {
-    const response = await fetch("https://backend-navyug-round1-result-2.onrender.com/result/schoolName", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: schoolName }),
+  const handleFetchDetails = async () => {
+    if (!schoolName || schoolName.trim() === "") {
+      alert("School name is not valid.");
+      return;
+    }
+    console.log(schoolRanking)
+    setIsFetching(true);
+    try {
+      const response = await fetch("https://backend-navyug-round1-result-2.onrender.com/result/schoolName", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: schoolName }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: BackendResponse = await response.json();
+
+      const updatedScores = data.scores
+        .map((score) => {
+          const matchingUser = data.userInfo.find((user) => user.username === score.username);
+          const category = matchingUser?.setid.startsWith("67") ? "Category 1" : "Category 2";
+          return {
+            ...score,
+            studentName: matchingUser?.student || "Unknown",
+            category,
+          };
+        })
+        // Sort by `studentName` in alphabetical order
+        .sort((a, b) => a.studentName.localeCompare(b.studentName));
+
+      setFetchedData({ ...data, scores: updatedScores });
+    } catch (error) {
+      alert("Failed to fetch details.");
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  const generateCertificate = async (studentName: string, uniqueNumber: string) => {
+    const templateResponse = await fetch(pdfTemplate);
+    const templateBuffer = await templateResponse.arrayBuffer();
+
+    const pdfDoc = await PDFDocument.load(templateBuffer);
+    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+    const pages = pdfDoc.getPages();
+    const firstPage = pages[0];
+    const { width, height } = firstPage.getSize();
+
+    const fontSize = 24;
+    const textWidth = helveticaFont.widthOfTextAtSize(studentName, fontSize);
+    const x = (width - textWidth) / 2;
+    const y = height / 2 + 3;
+
+    firstPage.drawText(studentName, {
+      x,
+      y,
+      size: fontSize,
+      font: helveticaFont,
+      color: rgb(0, 0, 0),
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    const numberFontSize = 18;
+    const numberX = 665;
+    const numberY = 22;
 
-    const data: BackendResponse = await response.json();
+    firstPage.drawText(uniqueNumber, {
+      x: numberX,
+      y: numberY,
+      size: numberFontSize,
+      font: helveticaFont,
+      color: rgb(1, 0, 0),
+    });
 
-    const updatedScores = data.scores
-      .map((score) => {
-        const matchingUser = data.userInfo.find((user) => user.username === score.username);
-        const category = matchingUser?.setid.startsWith("67") ? "Category 1" : "Category 2";
-        return {
-          ...score,
-          studentName: matchingUser?.student || "Unknown",
-          category,
-        };
-      })
-      // Sort by `studentName` in alphabetical order
-      .sort((a, b) => a.studentName.localeCompare(b.studentName));
+    return await pdfDoc.save();
+  };
 
-    setFetchedData({ ...data, scores: updatedScores });
-  } catch (error) {
-    alert("Failed to fetch details.");
-  } finally {
-    setIsFetching(false);
-  }
-};
-
-const generateCertificate = async (studentName: string, uniqueNumber: string) => {
-  const templateResponse = await fetch(pdfTemplate);
-  const templateBuffer = await templateResponse.arrayBuffer();
-
-  const pdfDoc = await PDFDocument.load(templateBuffer);
-  const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-  const pages = pdfDoc.getPages();
-  const firstPage = pages[0];
-  const { width, height } = firstPage.getSize();
-
-  const fontSize = 24;
-  const textWidth = helveticaFont.widthOfTextAtSize(studentName, fontSize);
-  const x = (width - textWidth) / 2;
-  const y = height / 2 + 3;
-
-  firstPage.drawText(studentName, {
-    x,
-    y,
-    size: fontSize,
-    font: helveticaFont,
-    color: rgb(0, 0, 0),
-  });
-
-  const numberFontSize = 18;
-  const numberX = 665;
-  const numberY = 22;
-
-  firstPage.drawText(uniqueNumber, {
-    x: numberX,
-    y: numberY,
-    size: numberFontSize,
-    font: helveticaFont,
-    color: rgb(1, 0, 0),
-  });
-
-  return await pdfDoc.save();
-};
   const handleDownloadAll = async () => {
     if (!fetchedData || fetchedData.scores.length === 0) {
       alert("No data to generate certificates.");
@@ -170,47 +174,68 @@ const generateCertificate = async (studentName: string, uniqueNumber: string) =>
       saveAs(content, "Certificates.zip");
     });
   };
-  
-  
+
   return (
-    <div>
-      <div className="shadow-lg">
-
-        <Header />
-
-        <div className='flex items-center mt-[2rem] justify-center'>
-          <Navbar/>
-        </div>
-        <div className="bg-white h-[100vh]">
-        <div className="flex items-center justify-center gap-[80px] p-4 mt-[4rem]">
-            <button
-              onClick={handleFetchDetails}
-              disabled={isFetching}
-              className="p-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
-            >
-              {isFetching ? "Loading..." : "Fetch Data"}
-            </button>
-
-            <button
-              onClick={handleDownloadAll}
-              disabled={!fetchedData || fetchedData.scores.length === 0}
-              className="p-2 bg-green-500 text-white rounded disabled:bg-gray-400"
-            >
-              Download All
-            </button>
+    <>
+      <div>
+        <div className="shadow-lg bg-gray-50 h-[100vh] overflow-hidden">
+          <Header />
+          <div className='flex items-center mt-[2rem] justify-center bg-gray-50'>
+            <Navbar />
           </div>
-          {/* School Ranking Section */}
-          
+          <div className="bg-gray-50 h-[100vh]">
+            <div className="flex items-center justify-center gap-[80px] p-4 mt-[4rem]">
+              <button
+                onClick={handleFetchDetails}
+                disabled={isFetching}
+                className="p-2 bg-[#4494cc] text-white rounded disabled:bg-gray-400"
+              >
+                {isFetching ? "Loading..." : "Fetch Data"}
+              </button>
 
-          {/* User Scores with Generate Certificate button for each student */}
-          {fetchedData && fetchedData.scores.length > 0 && (
-                <div className="p-4 mt-8 h-[300px]  font-bold text-2xl text-black flex items-center justify-center">
-                Data is now fetched you may download the certificates
+              <button
+                onClick={handleDownloadAll}
+                disabled={!fetchedData || fetchedData.scores.length === 0}
+                className="p-2 bg-[#4494cc] text-white rounded disabled:bg-gray-400"
+              >
+                 Download Certificates
+              </button>
+            </div>
+            
+            {/* Loader while fetching data */}
+            {isFetching && (
+              <div className="flex items-center justify-center p-4 mt-8 h-[300px] font-bold text-2xl text-black">
+                <DataLoader/>
               </div>
+            )}
+            
+             <div className='flex items-center justify-center mt-[3rem]'>
+          {!fetchedData && (
+            <>
+              <div className='text-black w-[80%] flex flex-col justify-center items-center text-left'>
+                <div className='mb-4 flex text-[18px] justify-center items-center text-left'>
+                  Over 800 students participated in Round 1 of the quiz, showcasing their immense enthusiasm and dedication toward academic excellence. Each participant has worked hard to prove their skills and push their limits. This incredible participation is a testament to the competitive spirit and passion for learning that our community holds. Your involvement in this event is more than just a number—it’s a reflection of your drive, ambition, and the future leaders we are cultivating. Keep pushing forward!
+                </div>
+
+                <div className='text-[18px] text-black '>
+                  Additionally, 50 APS (Academic Performance Scholars) also participated, setting a high benchmark for excellence. Their determination and commitment to mastering challenging concepts are truly inspiring. This event has brought together not just students, but an entire community committed to success. Whether you’re an APS participant or a student in the general pool, every effort made counts. Remember, success is not final, failure is not fatal—it’s the courage to continue that counts. You all are on a journey of growth and achievement!
+                </div>
+              </div>
+            </>
           )}
+          </div>
+
+            {/* User Scores with Generate Certificate button for each student */}
+            {fetchedData && fetchedData.scores.length > 0 && !isFetching && (
+              <div className="p-4 mt-8 h-[300px] font-bold text-2xl text-black flex items-center justify-center">
+                Data is now fetched, you may download the certificates
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

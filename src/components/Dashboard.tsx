@@ -12,6 +12,8 @@ import { armyPublicSchools } from "../data/drive.ts";
 import Navbar from "./Navbar.tsx";
 import DataLoader from "./DataLoader.tsx";
 import { useNavigate } from 'react-router-dom';
+import Footer from "./Footer.tsx";
+
 interface UserScore {
   username: string;
   studentName: string;
@@ -264,6 +266,7 @@ const renderCategory1Total = () => {
   const category2Scores = fetchedData?.scores.filter((score) => score.category === "Category 2");
 
   return (
+    <>
     
     <div className="h-[130vh] bg-gray-50">
       <Header/>
@@ -281,7 +284,7 @@ const renderCategory1Total = () => {
       <div className="text-center flex items-center justify-center gap-[2rem]">
       <button
         onClick={handleFetchDetails}
-        className={`bg-[#4494cc] text-white px-6 py-2 rounded shadow flex items-center gap-2 hover:bg-[#0c4f80] ${
+        className={`bg-[#4494cc] text-white px-6 py-2 rounded shadow flex items-center gap-2 hover:bg-[#0c4f80] disabled:bg-gray-500 ${
           isFetching ? "opacity-50 cursor-not-allowed" : ""
         }`}
         disabled={isFetching}
@@ -314,6 +317,7 @@ const renderCategory1Total = () => {
           "Load Marks"
         )}
       </button>
+
       <button
         onClick={handleDownloadAndRedirect}
         className="bg-[#4494cc] text-white px-6 py-2 rounded shadow hover:bg-[#0c4f80]"
@@ -550,7 +554,7 @@ const renderCategory1Total = () => {
   )}</div>
     </>
   ) : (
-    <div>N</div>
+    <div>No </div>
   )}
 </div>
       </>
@@ -558,6 +562,8 @@ const renderCategory1Total = () => {
     )}
     </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 

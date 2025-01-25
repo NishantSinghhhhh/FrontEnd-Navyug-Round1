@@ -178,7 +178,7 @@ const ECertificate = () => {
   return (
     <>
       <div>
-        <div className="shadow-lg bg-gray-50 h-[100vh] overflow-hidden">
+        <div className="shadow-lg bg-gray-50 h-[120vh] ">
           <Header />
           <div className='flex items-center mt-[2rem] justify-center bg-gray-50'>
             <Navbar />

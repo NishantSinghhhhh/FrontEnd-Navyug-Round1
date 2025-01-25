@@ -1,7 +1,6 @@
 import React from "react";
 import logo3 from "../../assets/logo.svg";
 import logo4 from "../../assets/Ait.svg";
-import { Link } from 'react-router-dom';
 
 const Header: React.FC = () => (
   <nav className="bg-white shadow-lg">

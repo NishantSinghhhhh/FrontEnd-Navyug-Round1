@@ -5,7 +5,7 @@ import { creds } from "../data/creds.ts";
 import { useAuth } from "../context/AuthContext.tsx";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import logo4 from "../assets/Ait.svg";
-
+import logo5 from "../assets/eb893b9cebc30693faeb8fbe5ee81cf9.png"
 interface FormState {
   username: string;
   password: string;
@@ -66,7 +66,7 @@ const Login: React.FC = () => {
       <div className="flex-grow flex items-center justify-center px-4 py-6">
         <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md w-full max-w-md sm:max-w-lg md:max-w-xl">
           <img 
-            src={logo} 
+            src={logo5} 
             alt="Logo" 
             className="w-1/2 sm:w-1/3 mx-auto mb-4 sm:mb-6"
           />
@@ -119,13 +119,13 @@ const Login: React.FC = () => {
             
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white text-sm sm:text-base font-semibold py-2 sm:py-3 rounded-md hover:bg-blue-700 transition"
+              className="w-full bg-[#4494cc] text-white text-sm sm:text-base font-semibold py-2 sm:py-3 rounded-md hover:bg-[#1c4868] transition"
             >
               Login
             </button>
             
             <p className="text-gray-400 text-xs text-center mt-4">
-              In case of any technical difficulty mail us.
+              In case of any technical difficulty mail us at: navyug@myaimate.com
             </p>
           </form>
         </div>

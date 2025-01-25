@@ -49,3 +49,4 @@ export const creds = [
     { username: "NAVYUG79011581", schoolName: "Army Public School Tenga Valley AP", password: "apsnavyug891" },
     { username: "NAVYUG17321054", schoolName: "Army Public School Dagshai", password: "apsnavyug891" },
 ];
+

@@ -10,20 +10,15 @@ const Header: React.FC = () => (
         <img 
           src={logo3} 
           alt="Logo" 
-          className="h-8 sm:h-12 w-auto"
+          className="h-6 sm:h-12 md:h-12 w-auto"
         />
-        <div className="flex items-center">
-          <Link 
-            to="/ECertificate" 
-            className="text-sm sm:text-base font-bold text-gray-900 hover:text-gray-600 hover:underline"
-          >
-            E-Certificate
-          </Link>
+        <div className="flex items-center font-bold md:text-[1.5rem] text-[0.8rem] text-black">
+         Navyug 2024-2025
         </div>
         <img 
           src={logo4} 
           alt="AWES Logo" 
-          className="h-8 sm:h-12"
+          className="h-6  md:h-12 sm:h-12"
         />
       </div>
     </div>

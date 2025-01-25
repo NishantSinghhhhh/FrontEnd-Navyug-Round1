@@ -9,7 +9,9 @@ import TableComponent from "./Dashboard/Table.tsx";
 import ScoresTable from "./Dashboard/ScoreTable.tsx";
 import BarGraph from "../charts/BarGraph.tsx";
 import { armyPublicSchools } from "../data/drive.ts";
-
+import Navbar from "./Navbar.tsx";
+import DataLoader from "./DataLoader.tsx";
+import { useNavigate } from 'react-router-dom';
 interface UserScore {
   username: string;
   studentName: string;
@@ -74,7 +76,8 @@ const Dashboard: React.FC = () => {
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [fetchedData, setFetchedData] = useState<BackendResponse | null>(null);
   const [schoolRanking, setSchoolRanking] = useState<SchoolRankingData | null>(null);
- 
+  const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
   const totalMarks = schoolFrequencyData.totalMarks;
   // const category1 = schoolFrequencyData.category1Marks
   const category2 = schoolFrequencyData.category2Marks
@@ -95,6 +98,11 @@ const Dashboard: React.FC = () => {
     useRef<HTMLDivElement | null>(null), 
     useRef<HTMLDivElement | null>(null), 
   ];
+
+  useEffect(() => {
+    // Redirect to a specific route when the page is loaded or refreshed
+    navigate('/Dashboard'); // Change '/Dashboard' to the desired route
+  }, [navigate]);
 
   const handleDownloadAndRedirect = () => {
     const user = creds.find((cred) => cred.username === username);
@@ -224,267 +232,331 @@ const handleFetchDetails = async () => {
   }
 };
 
+useEffect(() => {
+  const checkMobileView = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
 
-  
+  checkMobileView();
+  window.addEventListener("resize", checkMobileView);
+
+  return () => window.removeEventListener("resize", checkMobileView);
+}, []);
+
+// Conditional rendering for Category 1 Total
+const renderCategory1Total = () => {
+  if (isMobile) {
+    return (
+      <div className="p-4 mt-[3rem] text-center bg-gray-50">
+        <h2 className="text-xl font-bold text-blue-600">
+          Category 1 Detailed Analysis
+        </h2>
+        <p className="text-gray-700">
+          Detailed analysis is not available on mobile devices. Please use a
+          desktop or tablet for full view.
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
   const category1Scores = fetchedData?.scores.filter((score) => score.category === "Category 1");
   const category2Scores = fetchedData?.scores.filter((score) => score.category === "Category 2");
 
   return (
+    
     <div className="h-[130vh] bg-gray-50">
       <Header/>
+      <div className="flex items-center justify-center mt-[1rem]">
 
+      <Navbar/>
+      </div>
       <div className="text-center mb-12 mt-16">
-        <h1 className="text-4xl font-bold text-gray-800 mb-3">Round 1 Detailed Results</h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-3">Navyug Round 1 Analysis</h1>
       </div>
 
       <div className="text-black text-2xl font-bold flex justify-center items-center pb-10">
         {schoolName ? schoolName : "Loading school name..."}
       </div>
+      <div className="text-center flex items-center justify-center gap-[2rem]">
+      <button
+        onClick={handleFetchDetails}
+        className={`bg-[#4494cc] text-white px-6 py-2 rounded shadow flex items-center gap-2 hover:bg-[#0c4f80] ${
+          isFetching ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        disabled={isFetching}
+      >
+        {isFetching ? (
+          <>
+            <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8H4z"
+              ></path>
+            </svg>
+            Loading...
+          </>
+        ) : (
+          "Load Marks"
+        )}
+      </button>
+      <button
+        onClick={handleDownloadAndRedirect}
+        className="bg-[#4494cc] text-white px-6 py-2 rounded shadow hover:bg-[#0c4f80]"
+      >
+        Download Report
+      </button>
+    </div>
 
-      <div className="text-center flex  items-center justify-center gap-[2rem] ">
-        <button
-          onClick={handleFetchDetails}
-          className={`bg-blue-500 text-white px-6 py-2 rounded shadow hover:bg-blue-600 ${
-            isFetching ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          disabled={isFetching}
-        >
-          {isFetching ? "Fetching..." : "Fetch Details"}
-        </button>
-        <button 
-          onClick={handleDownloadAndRedirect}
-          className="bg-blue-500 text-white px-6 py-2 rounded shadow hover:bg-red-600"
-        >
-          Download PDF
-        </button>
-        <div>
-        </div>
-      </div>
 
-      <div>
+    <div>
+    {renderCategory1Total() ? (
+      renderCategory1Total()
+    ):(
+      <>
+             <div>
       {fetchedData && <ScoresTable scores={fetchedData.scores} totalMarks={totalMarks} />}
     </div>
 
-  <div>
-
-    </div>
     <div className="h-auto flex flex-col items-center justify-center bg-gray-50">
-  {fetchedData && (
+  {isFetching ? (
+    <DataLoader />
+  ) : fetchedData ? (
     <>
-      {/* Category 1 Components */}
-      {category1Scores && category1Scores.length > 0 && (
+  
+      <div> {/* Category 1 Components */}
+   {category1Scores && category1Scores.length > 0 && (
+    <>
+      {/* Total Marks */}
+      {category1Scores.some(score => score.totalMarks > 0) && (
         <>
-          {/* Total Marks */}
-          {category1Scores.some(score => score.totalMarks > 0) && (
-            <>
-              <div className="h-auto">
-                <TableComponent
+          <div className="h-auto w-[100%]">
+            <TableComponent
+          category="Category 1"
+          section="Total"
+          sectionKey="totalMarks"
+          fetchedData={{ ...fetchedData, scores: category1Scores }}
+          maxMarks={100} // Pass maximum marks for the section
+          calculatePercentile={(maxMarks, studentMarks) => (studentMarks / maxMarks) * 100}
+        />  
+
+          </div>
+          <div ref={barGraphRefs[0]} className="h-auto" style={{ width: 800, height: 800 }}>
+            <BarGraph
               category="Category 1"
               section="Total"
+              frequencyData={category2}
               sectionKey="totalMarks"
-              fetchedData={{ ...fetchedData, scores: category1Scores }}
-              maxMarks={100} // Pass maximum marks for the section
-              calculatePercentile={(maxMarks, studentMarks) => (studentMarks / maxMarks) * 100}
-            />  
-
-              </div>
-              <div ref={barGraphRefs[0]} className="h-auto" style={{ width: 800, height: 800 }}>
-                <BarGraph
-                  category="Category 1"
-                  section="Total"
-                  frequencyData={category2}
-                  sectionKey="totalMarks"
-                  fetchedData={fetchedData}
-                />
-              </div>
-            </>
-          )}
-
-          {/* Section 1 */}
-          {category1Scores.some(score => score.section1Marks > 0) && (
-            <>
-              <div className="h-auto">
-                <TableComponent
-                  category="Category 1"
-                  section="Section 1"
-                  maxMarks={40}
-                  sectionKey="section1Marks"
-                  fetchedData={fetchedData}
-                  calculatePercentile={calculatePercentile}
-                />
-              </div>
-              <div ref={barGraphRefs[1]} className="h-auto" style={{ width: 800, height: 800 }}>
-                <BarGraph
-                  category="Category 1"
-                  section="Section 1"
-                  frequencyData={category1Section1Marks}
-                  sectionKey="section1Marks"
-                  fetchedData={fetchedData}
-                />
-              </div>
-            </>
-          )}
-
-          {/* Section 2 */}
-          {category1Scores.some(score => score.section2Marks > 0) && (
-            <>
-              <div className="h-auto">
-                <TableComponent
-                  category="Category 1"
-                  section="Section 2"
-                  maxMarks={40}
-                  sectionKey="section2Marks"
-                  fetchedData={fetchedData}
-                  calculatePercentile={calculatePercentile}
-                />
-              </div>
-              <div ref={barGraphRefs[2]} className="h-auto" style={{ width: 800, height: 800 }}>
-                <BarGraph
-                  category="Category 1"
-                  section="Section 2"
-                  frequencyData={category1Section2Marks}
-                  sectionKey="section2Marks"
-                  fetchedData={fetchedData}
-                />
-              </div>
-            </>
-          )}
-
-          {/* Section 3 */}
-          {category1Scores.some(score => score.section3Marks > 0) && (
-            <>
-              <div className="h-auto">
-                <TableComponent
-                  category="Category 1"
-                  section="Section 3"
-                  maxMarks={20}
-                  sectionKey="section3Marks"
-                  fetchedData={fetchedData}
-                  calculatePercentile={calculatePercentile}
-                />
-              </div>
-              <div ref={barGraphRefs[3]} className="h-auto" style={{ width: 800, height: 800 }}>
-                <BarGraph
-                  category="Category 1"
-                  section="Section 3"
-                  frequencyData={category1Section3Marks}
-                  sectionKey="section3Marks"
-                  fetchedData={fetchedData}
-                />
-              </div>
-            </>
-          )}
+              fetchedData={fetchedData}
+            />
+          </div>
         </>
       )}
 
-      {/* Category 2 Components */}
-      {category2Scores && category2Scores.length > 0 && (
+      {/* Section 1 */}
+      {category1Scores.some(score => score.section1Marks > 0) && (
         <>
-          {/* Total Marks */}
-          {category2Scores.some(score => score.totalMarks > 0) && (
-            <>
-              <div className="h-auto">
-                <TableComponent
-                  category="Category 2"
-                  section="Total"
-                  maxMarks={100}
-                  sectionKey="totalMarks"
-                  fetchedData={fetchedData}
-                  calculatePercentile={calculatePercentile}
-                />
-              </div>
-              <div ref={barGraphRefs[4]} className="h-auto" style={{ width: 800, height: 800 }}>
-                <BarGraph
-                  category="Category 2"
-                  section="Total"
-                  frequencyData={category2}
-                  sectionKey="totalMarks"
-                  fetchedData={fetchedData}
-                />
-              </div>
-            </>
-          )}
+          <div className="h-auto">
+            <TableComponent
+              category="Category 1"
+              section="Section 1"
+              maxMarks={40}
+              sectionKey="section1Marks"
+              fetchedData={fetchedData}
+              calculatePercentile={calculatePercentile}
+            />
+          </div>
+          <div ref={barGraphRefs[1]} className="h-auto" style={{ width: 800, height: 800 }}>
+            <BarGraph
+              category="Category 1"
+              section="Section 1"
+              frequencyData={category1Section1Marks}
+              sectionKey="section1Marks"
+              fetchedData={fetchedData}
+            />
+          </div>
+        </>
+      )}
 
-          {/* Section 1 */}
-          {category2Scores.some(score => score.section1Marks > 0) && (
-            <>
-              <div className="h-auto">
-                <TableComponent
-                  category="Category 2"
-                  section="Section 1"
-                  maxMarks={40}
-                  sectionKey="section1Marks"
-                  fetchedData={fetchedData}
-                  calculatePercentile={calculatePercentile}
-                />
-              </div>
-              <div ref={barGraphRefs[5]} className="h-auto" style={{ width: 800, height: 800 }}>
-                <BarGraph
-                  category="Category 2"
-                  section="Section 1"
-                  frequencyData={category2Section1Marks}
-                  sectionKey="section1Marks"
-                  fetchedData={fetchedData}
-                />
-              </div>
-            </>
-          )}
+      {/* Section 2 */}
+      {category1Scores.some(score => score.section2Marks > 0) && (
+        <>
+          <div className="h-auto">
+            <TableComponent
+              category="Category 1"
+              section="Section 2"
+              maxMarks={40}
+              sectionKey="section2Marks"
+              fetchedData={fetchedData}
+              calculatePercentile={calculatePercentile}
+            />
+          </div>
+          <div ref={barGraphRefs[2]} className="h-auto" style={{ width: 800, height: 800 }}>
+            <BarGraph
+              category="Category 1"
+              section="Section 2"
+              frequencyData={category1Section2Marks}
+              sectionKey="section2Marks"
+              fetchedData={fetchedData}
+            />
+          </div>
+        </>
+      )}
 
-          {/* Section 2 */}
-          {category2Scores.some(score => score.section2Marks > 0) && (
-            <>
-              <div className="h-auto">
-                <TableComponent
-                  category="Category 2"
-                  section="Section 2"
-                  maxMarks={40}
-                  sectionKey="section2Marks"
-                  fetchedData={fetchedData}
-                  calculatePercentile={calculatePercentile}
-                />
-              </div>
-              <div ref={barGraphRefs[6]} className="h-auto" style={{ width: 800, height: 800 }}>
-                <BarGraph
-                  category="Category 2"
-                  section="Section 2"
-                  frequencyData={category2Section2Marks}
-                  sectionKey="section2Marks"
-                  fetchedData={fetchedData}
-                />
-              </div>
-            </>
-          )}
-
-          {/* Section 3 */}
-          {category2Scores.some(score => score.section3Marks > 0) && (
-            <>
-              <div className="h-auto">
-                <TableComponent
-                  category="Category 2"
-                  section="Section 3"
-                  maxMarks={20}
-                  sectionKey="section3Marks"
-                  fetchedData={fetchedData}
-                  calculatePercentile={calculatePercentile}
-                />
-              </div>
-              <div ref={barGraphRefs[7]} className="h-auto" style={{ width: 800, height: 800 }}>
-                <BarGraph
-                  category="Category 2"
-                  section="Section 3"
-                  frequencyData={category2Section3Marks}
-                  sectionKey="section3Marks"
-                  fetchedData={fetchedData}
-                />
-              </div>
-            </>
-          )}
+      {/* Section 3 */}
+      {category1Scores.some(score => score.section3Marks > 0) && (
+        <>
+          <div className="h-auto">
+            <TableComponent
+              category="Category 1"
+              section="Section 3"
+              maxMarks={20}
+              sectionKey="section3Marks"
+              fetchedData={fetchedData}
+              calculatePercentile={calculatePercentile}
+            />
+          </div>
+          <div ref={barGraphRefs[3]} className="h-auto" style={{ width: 800, height: 800 }}>
+            <BarGraph
+              category="Category 1"
+              section="Section 3"
+              frequencyData={category1Section3Marks}
+              sectionKey="section3Marks"
+              fetchedData={fetchedData}
+            />
+          </div>
         </>
       )}
     </>
   )}
+
+  {/* Category 2 Components */}
+  {category2Scores && category2Scores.length > 0 && (
+    <>
+      {/* Total Marks */}
+      {category2Scores.some(score => score.totalMarks > 0) && (
+        <>
+          <div className="h-auto">
+            <TableComponent
+              category="Category 2"
+              section="Total"
+              maxMarks={100}
+              sectionKey="totalMarks"
+              fetchedData={fetchedData}
+              calculatePercentile={calculatePercentile}
+            />
+          </div>
+          <div ref={barGraphRefs[4]} className="h-auto" style={{ width: 800, height: 800 }}>
+            <BarGraph
+              category="Category 2"
+              section="Total"
+              frequencyData={category2}
+              sectionKey="totalMarks"
+              fetchedData={fetchedData}
+            />
+          </div>
+        </>
+      )}
+
+      {/* Section 1 */}
+      {category2Scores.some(score => score.section1Marks > 0) && (
+        <>
+          <div className="h-auto">
+            <TableComponent
+              category="Category 2"
+              section="Section 1"
+              maxMarks={40}
+              sectionKey="section1Marks"
+              fetchedData={fetchedData}
+              calculatePercentile={calculatePercentile}
+            />
+          </div>
+          <div ref={barGraphRefs[5]} className="h-auto" style={{ width: 800, height: 800 }}>
+            <BarGraph
+              category="Category 2"
+              section="Section 1"
+              frequencyData={category2Section1Marks}
+              sectionKey="section1Marks"
+              fetchedData={fetchedData}
+            />
+          </div>
+        </>
+      )}
+
+      {/* Section 2 */}
+      {category2Scores.some(score => score.section2Marks > 0) && (
+        <>
+          <div className="h-auto">
+            <TableComponent
+              category="Category 2"
+              section="Section 2"
+              maxMarks={40}
+              sectionKey="section2Marks"
+              fetchedData={fetchedData}
+              calculatePercentile={calculatePercentile}
+            />
+          </div>
+          <div ref={barGraphRefs[6]} className="h-auto" style={{ width: 800, height: 800 }}>
+            <BarGraph
+              category="Category 2"
+              section="Section 2"
+              frequencyData={category2Section2Marks}
+              sectionKey="section2Marks"
+              fetchedData={fetchedData}
+            />
+          </div>
+        </>
+      )}
+
+      {/* Section 3 */}
+      {category2Scores.some(score => score.section3Marks > 0) && (
+        <>
+          <div className="h-auto">
+            <TableComponent
+              category="Category 2"
+              section="Section 3"
+              maxMarks={20}
+              sectionKey="section3Marks"
+              fetchedData={fetchedData}
+              calculatePercentile={calculatePercentile}
+            />
+          </div>
+          <div ref={barGraphRefs[7]} className="h-auto" style={{ width: 800, height: 800 }}>
+            <BarGraph
+              category="Category 2"
+              section="Section 3"
+              frequencyData={category2Section3Marks}
+              sectionKey="section3Marks"
+              fetchedData={fetchedData}
+            />
+          </div>
+        </>
+      )}
+    </>
+  )}</div>
+    </>
+  ) : (
+    <div>N</div>
+  )}
 </div>
-   
+      </>
+      
+    )}
+    </div>
     </div>
   );
 };

@@ -7,7 +7,8 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import pdfTemplate from '../assets/Round 1 participants.pdf';
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-
+import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar.tsx';
 interface UserScore {
   username: string;
   studentName: string;
@@ -46,6 +47,12 @@ const ECertificate = () => {
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [fetchedData, setFetchedData] = useState<BackendResponse | null>(null);
   const [schoolRanking, setSchoolRanking] = useState<SchoolRankingData | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect to a specific route when the page is loaded or refreshed
+    navigate('/ECertificate'); // Change '/Dashboard' to the desired route
+  }, [navigate]);
 
   useEffect(() => {
     if (!username) return;
@@ -168,7 +175,12 @@ const generateCertificate = async (studentName: string, uniqueNumber: string) =>
   return (
     <div>
       <div className="shadow-lg">
+
         <Header />
+
+        <div className='flex items-center mt-[2rem] justify-center'>
+          <Navbar/>
+        </div>
         <div className="bg-white h-[100vh]">
         <div className="flex items-center justify-center gap-[80px] p-4 mt-[4rem]">
             <button

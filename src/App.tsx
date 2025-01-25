@@ -13,7 +13,7 @@ const App = () => {
     <AuthProvider>
     <RankingProvider>
       <Router>
-        <div className="md:w-[100vw] w-[100vw] h-[100vh] bg-white">
+        <div className="md:w-[100vw] w-[100vw] h-[100vh] bg-white overflow-x-hidden">
           <div className=" w-[100%] h-[100%]"> {/* This ensures content doesn't overlap with the navbar */}
             <Routes>
               <Route path="/" element={<Login />} />  

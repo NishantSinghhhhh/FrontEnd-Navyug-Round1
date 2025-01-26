@@ -55,20 +55,25 @@ const Navbar: React.FC = () => {
           <div className="absolute top-full -ml-[4rem] bg-white border border-black p-4 rounded-lg shadow-md animate-fade-in">
             <ul className="space-y-4">
               <li>
-                <Link to="/Dashboard" className="hover:text-gray-300 transition-colors" onClick={() => setIsOpen(false)}>
+                <Link to="/Dashboard" className="hover:text-[#035185] transition-colors text-[#4494cc]" onClick={() => setIsOpen(false)}>
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/ECertificate" className="hover:text-gray-300 transition-colors" onClick={() => setIsOpen(false)}>
+                <Link to="/ECertificate" className="hover:text-[#035185] transition-colors text-[#4494cc]" onClick={() => setIsOpen(false)}>
                   E-Certificates
                 </Link>
               </li>
               <li>
-                <Link to="https://www.myaimate.com/" target="_blank" className="hover:text-gray-300 transition-colors" onClick={() => setIsOpen(false)}>
+                <Link to="https://www.myaimate.com/" target="_blank" className="hover:text-[#035185] text-[#4494cc] transition-colors" onClick={() => setIsOpen(false)}>
                   Contact Us
                 </Link>
               </li>
+              <li>
+            <Link to="https://verify.myaimate.com/" target="_blank" className="hover:text-[#035185] transition-colors text-[#4494cc]">
+              Verify Certificates
+            </Link>
+          </li>
             </ul>
           </div>
         )}

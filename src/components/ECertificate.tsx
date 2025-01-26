@@ -217,9 +217,6 @@ const ECertificate = () => {
                       Over 800 students participated in Round 1 of the quiz, showcasing their immense enthusiasm and dedication toward academic excellence. Each participant has worked hard to prove their skills and push their limits. This incredible participation is a testament to the competitive spirit and passion for learning that our community holds. Your involvement in this event is more than just a number—it’s a reflection of your drive, ambition, and the future leaders we are cultivating. Keep pushing forward!
                     </div>
   
-                    <div className="text-[18px] text-black">
-                      Additionally, 50 APS (Academic Performance Scholars) also participated, setting a high benchmark for excellence. Their determination and commitment to mastering challenging concepts are truly inspiring.
-                    </div>
                   </div>
                 </>
               )}

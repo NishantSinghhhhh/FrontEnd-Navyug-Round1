@@ -31,6 +31,11 @@ const Navbar: React.FC = () => {
               Contact Us
             </Link>
           </li>
+          <li>
+            <Link to="https://verify.myaimate.com/" target="_blank" className="hover:text-[#035185] transition-colors text-[#4494cc]">
+              Verify Certificates
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

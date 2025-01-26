@@ -177,13 +177,13 @@ const ECertificate = () => {
 
   return (
     <>
-      <div className='flex flex-col'>
-        <div className="shadow-lg bg-gray-50 h-auto ">
+      <div className="flex flex-col min-h-screen">
+        <div className="shadow-lg bg-gray-50 flex-grow">
           <Header />
-          <div className='flex items-center mt-[2rem] justify-center bg-gray-50'>
+          <div className="flex items-center mt-[2rem] justify-center bg-gray-50">
             <Navbar />
           </div>
-          <div className="bg-gray-50 h-[100vh]">
+          <div className="bg-gray-50">
             <div className="flex items-center justify-center gap-[80px] p-4 mt-[4rem]">
               <button
                 onClick={handleFetchDetails}
@@ -192,39 +192,39 @@ const ECertificate = () => {
               >
                 {isFetching ? "Loading..." : "Fetch Data"}
               </button>
-
+  
               <button
                 onClick={handleDownloadAll}
                 disabled={!fetchedData || fetchedData.scores.length === 0}
                 className="p-2 bg-[#4494cc] text-white rounded disabled:bg-gray-400"
               >
-                 Download Certificates
+                Download Certificates
               </button>
             </div>
-            
+  
             {/* Loader while fetching data */}
             {isFetching && (
               <div className="flex items-center justify-center p-4 mt-8 h-[300px] font-bold text-2xl text-black">
-                <DataLoader/>
+                <DataLoader />
               </div>
             )}
-            
-             <div className='flex items-center justify-center mt-[3rem]'>
-          {!fetchedData && (
-            <>
-              <div className='text-black w-[80%] flex flex-col justify-center items-center text-left'>
-                <div className='mb-4 flex text-[18px] justify-center items-center text-left'>
-                  Over 800 students participated in Round 1 of the quiz, showcasing their immense enthusiasm and dedication toward academic excellence. Each participant has worked hard to prove their skills and push their limits. This incredible participation is a testament to the competitive spirit and passion for learning that our community holds. Your involvement in this event is more than just a number—it’s a reflection of your drive, ambition, and the future leaders we are cultivating. Keep pushing forward!
-                </div>
-
-                <div className='text-[18px] text-black '>
-                  Additionally, 50 APS (Academic Performance Scholars) also participated, setting a high benchmark for excellence. Their determination and commitment to mastering challenging concepts are truly inspiring.
-                </div>
-              </div>
-            </>
-          )}
-          </div>
-
+  
+            <div className="flex items-center justify-center mt-[3rem]">
+              {!fetchedData && (
+                <>
+                  <div className="text-black w-[80%] flex flex-col justify-center items-center text-left">
+                    <div className="mb-4 flex text-[18px] justify-center items-center text-left">
+                      Over 800 students participated in Round 1 of the quiz, showcasing their immense enthusiasm and dedication toward academic excellence. Each participant has worked hard to prove their skills and push their limits. This incredible participation is a testament to the competitive spirit and passion for learning that our community holds. Your involvement in this event is more than just a number—it’s a reflection of your drive, ambition, and the future leaders we are cultivating. Keep pushing forward!
+                    </div>
+  
+                    <div className="text-[18px] text-black">
+                      Additionally, 50 APS (Academic Performance Scholars) also participated, setting a high benchmark for excellence. Their determination and commitment to mastering challenging concepts are truly inspiring.
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+  
             {/* User Scores with Generate Certificate button for each student */}
             {fetchedData && fetchedData.scores.length > 0 && !isFetching && (
               <div className="p-4 mt-8 h-[300px] font-bold text-2xl text-black flex items-center justify-center">
@@ -233,11 +233,10 @@ const ECertificate = () => {
             )}
           </div>
         </div>
-      <Footer />
+        <Footer />
       </div>
-      
     </>
   );
-};
-
+  
+}
 export default ECertificate;

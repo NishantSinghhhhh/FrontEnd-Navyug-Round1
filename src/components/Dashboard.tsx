@@ -268,7 +268,7 @@ const renderCategory1Total = () => {
   return (
     <>
     
-    <div className="h-[130vh] bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <Header/>
       <div className="flex items-center justify-center mt-[1rem]">
 
@@ -562,7 +562,10 @@ const renderCategory1Total = () => {
     )}
     </div>
     </div>
+    <div>
     <Footer/>
+
+    </div>
     </>
   );
 };

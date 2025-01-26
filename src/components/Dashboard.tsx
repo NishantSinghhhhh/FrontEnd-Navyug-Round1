@@ -103,8 +103,7 @@ const Dashboard: React.FC = () => {
   ];
 
   useEffect(() => {
-    // Redirect to a specific route when the page is loaded or refreshed
-    navigate('/Dashboard'); // Change '/Dashboard' to the desired route
+    navigate('/Dashboard');
   }, [navigate]);
 
   const handleDownloadAndRedirect = () => {

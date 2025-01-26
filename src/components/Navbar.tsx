@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
         <ul className="hidden md:flex w-full justify-around space-x-6 text-[#4494cc]">
           <li>
             <Link to="/Dashboard" className="hover:text-[#035185] transition-colors text-[#4494cc]">
-              Home
+              Report
             </Link>
           </li>
           <li>
@@ -56,7 +56,7 @@ const Navbar: React.FC = () => {
             <ul className="space-y-4">
               <li>
                 <Link to="/Dashboard" className="hover:text-[#035185] transition-colors text-[#4494cc]" onClick={() => setIsOpen(false)}>
-                  Home
+                  Report
                 </Link>
               </li>
               <li>

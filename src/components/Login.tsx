@@ -53,15 +53,27 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* Responsive Navbar */}
       <nav className="bg-white shadow-md p-4">
         <div className="container mx-auto flex justify-between items-center">
-          <img src={logo5} alt="Logo" className="h-8 sm:h-10 md:h-12" />
-          <img src={logo4} alt="AWES Logo" className="h-8 sm:h-10 md:h-12" />
+          <a href="https://www.myaimate.com/" target="_blank" rel="noopener noreferrer">
+            <img src={logo5} alt="Logo" className="h-8 sm:h-10 md:h-12" />
+          </a>
+          <a 
+            href="https://www.myaimate.com/navyug" 
+            className="text-decoration-none text-black font-bold text-[1rem] hover:underline"
+            target="_blank" 
+            rel="noopener noreferrer"
+          >
+            NAVYUG 2024-2025
+          </a>
+
+          <a href="https://www.aitpune.in/" target="_blank" rel="noopener noreferrer">
+            <img src={logo4} alt="AWES Logo" className="h-8 sm:h-10 md:h-12" />
+          </a>
         </div>
       </nav>
 
-      {/* Responsive Login Container */}
+
       <div className="flex-grow flex items-center justify-center px-4 py-6">
         <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md w-full max-w-md sm:max-w-lg md:max-w-xl">
           <img 

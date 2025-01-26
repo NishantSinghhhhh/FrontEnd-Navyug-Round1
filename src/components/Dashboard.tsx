@@ -79,6 +79,7 @@ const Dashboard: React.FC = () => {
   const [fetchedData, setFetchedData] = useState<BackendResponse | null>(null);
   const [schoolRanking, setSchoolRanking] = useState<SchoolRankingData | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoadMarksClicked, setIsLoadMarksClicked] = useState(false);
   const navigate = useNavigate();
   const totalMarks = schoolFrequencyData.totalMarks;
   // const category1 = schoolFrequencyData.category1Marks
@@ -107,13 +108,14 @@ const Dashboard: React.FC = () => {
   }, [navigate]);
 
   const handleDownloadAndRedirect = () => {
+    if (!isLoadMarksClicked) return;
     const user = creds.find((cred) => cred.username === username);
     
     if (user) {
       const currentSchoolData = armyPublicSchools.find(
         (school) => school.schoolName === user.schoolName
       );
-  
+      
       if (currentSchoolData) {
         window.open(currentSchoolData.driveLink, '_blank');
       } else {
@@ -122,8 +124,9 @@ const Dashboard: React.FC = () => {
     } else {
       console.error('No user found');
     }
+    alert("Downloading report...");
   };
-
+  
   const calculatePercentile = (maxMarks: number, studentMarks: number): number => {
     if (studentMarks > maxMarks) {
         throw new Error("Student marks cannot exceed maximum marks.");
@@ -231,6 +234,7 @@ const handleFetchDetails = async () => {
     alert("Failed to fetch details.");
   } finally {
     setIsFetching(false);
+    setIsLoadMarksClicked(true);
   }
 };
 
@@ -285,9 +289,9 @@ const renderCategory1Total = () => {
       <button
         onClick={handleFetchDetails}
         className={`bg-[#4494cc] text-white px-6 py-2 rounded shadow flex items-center gap-2 hover:bg-[#0c4f80] disabled:bg-gray-500 ${
-          isFetching ? "opacity-50 cursor-not-allowed" : ""
+          isFetching || isLoadMarksClicked ? "opacity-50 cursor-not-allowed" : ""
         }`}
-        disabled={isFetching}
+        disabled={isFetching || isLoadMarksClicked}
       >
         {isFetching ? (
           <>
@@ -314,19 +318,23 @@ const renderCategory1Total = () => {
             Loading...
           </>
         ) : (
-          "Load Marks"
+          "Load Report"
         )}
       </button>
 
       <button
         onClick={handleDownloadAndRedirect}
-        className="bg-[#4494cc] text-white px-6 py-2 rounded shadow hover:bg-[#0c4f80]"
+        disabled={!isLoadMarksClicked}
+        className={`px-6 py-2 rounded shadow ${
+          isLoadMarksClicked
+            ? "bg-[#4494cc] text-white hover:bg-[#0c4f80]"
+            : "bg-gray-500 text-gray-300 cursor-not-allowed"
+        }`}
       >
         Download Report
       </button>
     </div>
-
-
+  
     <div>
     {renderCategory1Total() ? (
       renderCategory1Total()
@@ -409,7 +417,7 @@ const renderCategory1Total = () => {
               calculatePercentile={calculatePercentile}
             />
           </div>
-          <div ref={barGraphRefs[2]} className="h-auto" style={{ width: 800, height: 800 }}>
+          <div ref={barGraphRefs[2]} className="h-auto flex items-center justify-center" style={{ width: 800, height: 800 }}>
             <BarGraph
               category="Category 1"
               section="Section 2"

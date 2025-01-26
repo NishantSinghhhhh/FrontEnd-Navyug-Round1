@@ -50,6 +50,8 @@ const ECertificate = () => {
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [fetchedData, setFetchedData] = useState<BackendResponse | null>(null);
   const [schoolRanking, setSchoolRanking] = useState<SchoolRankingData | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -115,6 +117,7 @@ const ECertificate = () => {
     }
   };
 
+  
   const generateCertificate = async (studentName: string, uniqueNumber: string) => {
     const templateResponse = await fetch(pdfTemplate);
     const templateBuffer = await templateResponse.arrayBuffer();
@@ -160,6 +163,8 @@ const ECertificate = () => {
       return;
     }
 
+    setIsDownloading(true);
+
     const zip = new JSZip();
 
     for (let index = 0; index < fetchedData.scores.length; index++) {
@@ -173,65 +178,107 @@ const ECertificate = () => {
     zip.generateAsync({ type: "blob" }).then((content) => {
       saveAs(content, "Certificates.zip");
     });
+
+    setTimeout(() => {
+      alert("Certificates downloaded!");
+      setIsDownloading(false); // Reset downloading state
+    }, 2000);
   };
 
   return (
     <>
-      <div className="flex flex-col min-h-screen">
-        <div className="shadow-lg bg-gray-50 flex-grow">
-          <Header />
-          <div className="flex items-center mt-[2rem] justify-center bg-gray-50">
-            <Navbar />
-          </div>
-          <div className="bg-gray-50">
-            <div className="flex items-center justify-center gap-[80px] p-4 mt-[4rem]">
-              <button
-                onClick={handleFetchDetails}
-                disabled={isFetching}
-                className="p-2 bg-[#4494cc] text-white rounded disabled:bg-gray-400"
-              >
-                {isFetching ? "Loading..." : "Fetch Data"}
-              </button>
-  
-              <button
-                onClick={handleDownloadAll}
-                disabled={!fetchedData || fetchedData.scores.length === 0}
-                className="p-2 bg-[#4494cc] text-white rounded disabled:bg-gray-400"
-              >
-                Download Certificates
-              </button>
-            </div>
-  
-            {/* Loader while fetching data */}
-            {isFetching && (
-              <div className="flex items-center justify-center p-4 mt-8 h-[300px] font-bold text-2xl text-black">
-                <DataLoader />
-              </div>
-            )}
-  
-            <div className="flex items-center justify-center mt-[3rem]">
-              {!fetchedData && (
-                <>
-                  <div className="text-black w-[80%] flex flex-col justify-center items-center text-left">
-                    <div className="mb-4 flex text-[18px] justify-center items-center text-left">
-                      Over 800 students participated in Round 1 of the quiz, showcasing their immense enthusiasm and dedication toward academic excellence. Each participant has worked hard to prove their skills and push their limits. This incredible participation is a testament to the competitive spirit and passion for learning that our community holds. Your involvement in this event is more than just a number—it’s a reflection of your drive, ambition, and the future leaders we are cultivating. Keep pushing forward!
-                    </div>
-  
-                  </div>
-                </>
-              )}
-            </div>
-  
-            {/* User Scores with Generate Certificate button for each student */}
-            {fetchedData && fetchedData.scores.length > 0 && !isFetching && (
-              <div className="p-4 mt-8 h-[300px] font-bold text-2xl text-black flex items-center justify-center">
-                Data is now fetched, you may download the certificates
-              </div>
-            )}
+<div className="flex flex-col min-h-screen">
+  <div className="shadow-lg bg-gray-50 flex-grow">
+    <Header />
+    <div className="flex items-center mt-[2rem] justify-center bg-gray-50">
+      <Navbar />
+    </div>
+    <div className="bg-gray-50">
+    <div className="flex items-center justify-center gap-4 mt-[4rem]">
+      {/* Fetch Data Button */}
+      <button
+        onClick={handleFetchDetails}
+        disabled={Boolean(fetchedData)}
+        className={`p-2 rounded text-white bg-[#4494cc] hover:bg-[#0c4f80] disabled:bg-gray-400 ${
+          fetchedData ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        {fetchedData ? "Certificates Loaded" : "Load Certificates"}
+      </button>
+
+      {/* Download Certificates Button */}
+      <button
+        onClick={handleDownloadAll}
+        disabled={!fetchedData || isDownloading}
+        className={`p-2 rounded text-white bg-[#4494cc] hover:bg-[#0c4f80] disabled:bg-gray-400 flex items-center gap-2 ${
+          isDownloading ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        {isDownloading ? (
+          <>
+            <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8H4z"
+              ></path>
+            </svg>
+            Downloading...
+          </>
+        ) : (
+          "Download Certificates"
+        )}
+      </button>
+    </div>
+    </div>
+
+    {/* Loader while fetching data */}
+    {isFetching && (
+      <div className="flex items-center justify-center p-4 mt-8 h-[300px] font-bold text-2xl text-black">
+        <DataLoader />
+      </div>
+    )}
+
+    <div className="flex items-center justify-center mt-[3rem]">
+      {!fetchedData && (
+        <div className="text-black w-[80%] flex flex-col justify-center items-center text-left">
+          <div className="mb-4 flex text-[18px] justify-center items-center text-left">
+            Over 800 students participated in Round 1 of the quiz, showcasing
+            their immense enthusiasm and dedication toward academic excellence.
+            Each participant has worked hard to prove their skills and push
+            their limits. This incredible participation is a testament to the
+            competitive spirit and passion for learning that our community
+            holds. Your involvement in this event is more than just a
+            number—it’s a reflection of your drive, ambition, and the future
+            leaders we are cultivating. Keep pushing forward!
           </div>
         </div>
-        <Footer />
+      )}
+    </div>
+
+    {/* User Scores with Generate Certificate button for each student */}
+    {fetchedData && fetchedData.scores.length > 0 && !isFetching && (
+      <div className="p-4 mt-8 h-[300px] font-bold text-2xl text-black flex items-center justify-center">
+        Click on Download All button to get the Certificates
       </div>
+    )}
+  </div>
+  <Footer />
+</div>
+
     </>
   );
   

@@ -15,19 +15,19 @@ const Navbar: React.FC = () => {
       {/* Logo or other content can go here */}
       <div className="flex justify-between items-center w-full">
         {/* Navigation Links */}
-        <ul className="hidden md:flex w-full justify-around space-x-6">
+        <ul className="hidden md:flex w-full justify-around space-x-6 text-[#4494cc]">
           <li>
-            <Link to="/Dashboard" className="hover:text-gray-300 transition-colors">
+            <Link to="/Dashboard" className="hover:text-[#035185] transition-colors text-[#4494cc]">
               Home
             </Link>
           </li>
           <li>
-            <Link to="/ECertificate" className="hover:text-gray-300 transition-colors">
+            <Link to="/ECertificate" className="hover:text-[#035185] transition-colors text-[#4494cc]">
               E-Certificates
             </Link>
           </li>
           <li>
-            <Link to="https://www.myaimate.com/" target="_blank" className="hover:text-gray-300 transition-colors">
+            <Link to="https://www.myaimate.com/" target="_blank" className="hover:text-[#035185] transition-colors text-[#4494cc]">
               Contact Us
             </Link>
           </li>

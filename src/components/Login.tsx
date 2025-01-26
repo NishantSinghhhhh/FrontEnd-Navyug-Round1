@@ -60,7 +60,7 @@ const Login: React.FC = () => {
           </a>
           <a 
             href="https://www.myaimate.com/navyug" 
-            className="text-decoration-none text-black hover:text-black font-bold text-[1.3rem] "
+            className="text-decoration-none text-black hover:text-[#615f5f] font-bold text-[1.3rem] "
             target="_blank" 
             rel="noopener noreferrer"
           >

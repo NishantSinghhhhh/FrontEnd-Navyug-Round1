@@ -26,7 +26,7 @@ const Header: React.FC = () => (
           </a>
 
         {/* Clickable Logo 2 */}
-        <a href="https://www.myaimate.com/" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.aitpune.in/" target="_blank" rel="noopener noreferrer">
           <img 
             src={logo4} 
             alt="AWES Logo" 

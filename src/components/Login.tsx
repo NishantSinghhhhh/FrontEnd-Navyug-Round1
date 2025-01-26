@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.svg";
 import { creds } from "../data/creds.ts";
 import { useAuth } from "../context/AuthContext.tsx";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -57,7 +56,7 @@ const Login: React.FC = () => {
       {/* Responsive Navbar */}
       <nav className="bg-white shadow-md p-4">
         <div className="container mx-auto flex justify-between items-center">
-          <img src={logo} alt="Logo" className="h-8 sm:h-10 md:h-12" />
+          <img src={logo5} alt="Logo" className="h-8 sm:h-10 md:h-12" />
           <img src={logo4} alt="AWES Logo" className="h-8 sm:h-10 md:h-12" />
         </div>
       </nav>
@@ -89,7 +88,7 @@ const Login: React.FC = () => {
                 placeholder="Username"
                 type="text"
                 required
-                className="block bg-white w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="block bg-white w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base text-black border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             
@@ -98,15 +97,15 @@ const Login: React.FC = () => {
                 Password
               </label>
               <div className="relative">
-                <input
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  type={formData.showPassword ? "text" : "password"}
-                  placeholder="Password"
-                  required
-                  className="block bg-white w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 pr-10"
-                />
+              <input
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                type={formData.showPassword ? "text" : "password"}
+                placeholder="Password"
+                required
+                className="block bg-white w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base text-black border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 pr-10"
+              />
                 <button
                   type="button"
                   onClick={togglePassword}

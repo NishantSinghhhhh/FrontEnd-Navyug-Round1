@@ -256,7 +256,7 @@ const ECertificate = () => {
       {!fetchedData && (
         <div className="text-black w-[80%] flex flex-col justify-center items-center text-left">
           <div className="mb-4 flex text-[18px] justify-center items-center text-left">
-            Over 800 students participated in Round 1 of the quiz, showcasing
+            Over 600 students participated in Round 1 of the quiz, showcasing
             their immense enthusiasm and dedication toward academic excellence.
             Each participant has worked hard to prove their skills and push
             their limits. This incredible participation is a testament to the

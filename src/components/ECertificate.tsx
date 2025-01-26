@@ -177,8 +177,8 @@ const ECertificate = () => {
 
   return (
     <>
-      <div>
-        <div className="shadow-lg bg-gray-50 h-[120vh] ">
+      <div className='flex flex-col'>
+        <div className="shadow-lg bg-gray-50 h-auto ">
           <Header />
           <div className='flex items-center mt-[2rem] justify-center bg-gray-50'>
             <Navbar />
@@ -233,8 +233,9 @@ const ECertificate = () => {
             )}
           </div>
         </div>
-      </div>
       <Footer />
+      </div>
+      
     </>
   );
 };

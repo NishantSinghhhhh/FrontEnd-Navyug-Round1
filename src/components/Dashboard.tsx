@@ -561,7 +561,7 @@ const renderCategory1Total = () => {
   )}</div>
     </>
   ) : (
-    <div>No </div>
+    <div></div>
   )}
 </div>
       </>

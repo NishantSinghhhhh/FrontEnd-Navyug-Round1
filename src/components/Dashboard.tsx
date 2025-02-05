@@ -508,7 +508,7 @@ const renderCategory1Total = () => {
         </>
       )}
 
-      {/* Section 2 */}
+  
       {category2Scores.some(score => score.section2Marks > 0) && (
         <>
           <div className="h-auto">
